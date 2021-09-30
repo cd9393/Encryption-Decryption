@@ -1,22 +1,28 @@
 package com.company;
-import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
-        Scanner scanner = new Scanner(System.in);
+        // write your code here
+        String mode = "enc";
+        int key = 0;
+        String data = "";
 
-        String encryptionOrDecryption = scanner.nextLine();
+        for (int i = 0; i < args.length; i += 2) {
+            if ("-key".equals(args[i])) {
+                key = Integer.parseInt(args[i + 1]);
+            } else if ("-mode".equals(args[i])) {
+                mode = args[i + 1];
+            } else if ("-data".equals(args[i])) {
+                data = args[i + 1];
+            }
+        }
 
-        if (encryptionOrDecryption.equals("enc")) {
-            String originalText = scanner.nextLine();
-            Integer key = scanner.nextInt();
-            String encrypted = Encryption.encrypt(originalText, key);
+        if (("enc").equals(mode)) {
+            String encrypted = Encryption.encrypt(data, key);
             System.out.println(encrypted);
-        } else if (encryptionOrDecryption.equals("dec")) {
-            String cypherText = scanner.nextLine();
-            int key = scanner.nextInt();
-            String message = Decryption.decrypt(cypherText, key);
+        } else if (("dec").equals(mode)) {
+            String message = Decryption.decrypt(data, key);
             System.out.println(message);
         }
     }
