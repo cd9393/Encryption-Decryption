@@ -12,6 +12,7 @@ public class EncryptDecryptProgramme {
     private int key = 0;
     private String inputFilePath = "";
     private String outputFilePath = "";
+    private String algorithm = "shift";
 
     public EncryptDecryptProgramme(String[] arguments) {
     parseArgs(arguments);
@@ -22,11 +23,17 @@ public class EncryptDecryptProgramme {
             setData(readFromFile(inputFilePath));
         }
 
+        String output = "";
+
         if (("enc").equals(getMode())) {
-            encryptionMode(data,key,outputFilePath);
+          EncryptionFactory encryptionFactory = new EncryptionFactory();
+          output = encryptionFactory.createEncryption(algorithm).encrypt(data,key);
         } else if (("dec").equals(mode)) {
-            decryptionMode(data,key,outputFilePath);
+            DecryptionFactory decryptionFactory = new DecryptionFactory();
+            output = decryptionFactory.returnDecryption(algorithm).decrypt(data,key);
         }
+
+        writeData(output, outputFilePath );
     }
 
     private void parseArgs(String[] args) {
@@ -41,11 +48,17 @@ public class EncryptDecryptProgramme {
                 setInputFilePath(args[i + 1]);
             }else if ("-out".equals(args[i])) {
                 setOutputFilePath(args[i + 1]);
+            }else if ("-alg".equals(args[i])) {
+                setAlgorithm(args[i + 1]);
             }
         }
     }
 
-    private static String readFromFile(String in) {
+    private void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    private String readFromFile(String in) {
         File file = new File(in);
         String fileContents = "";
         try (Scanner scanner = new Scanner(file)) {
@@ -60,34 +73,33 @@ public class EncryptDecryptProgramme {
         }
         return fileContents;
     }
-
-    private static void encryptionMode(String data, int key, String out) {
-        String encrypted = Encryption.encrypt(data, key);
+// CHANGE THESE TWO METHODS. THESE SHOULD BE OUTPUT . HAVE SEPERATE STEP FOR ENCRYPTION AND DECRYPTION
+    private void writeData(String data, String out) {
         if ("".equals(out)) {
-            System.out.println(encrypted);
+            System.out.println(data);
         } else {
             File file = new File(out);
             try (FileWriter writer = new FileWriter(file)) {
-                writer.write(encrypted);
+                writer.write(data);
             } catch (IOException e) {
                 System.out.printf("An exception occurs %s", e.getMessage());
             }
         }
     }
 
-    private static void decryptionMode(String data, int key, String output) {
-        String message = Decryption.decrypt(data, key);
-        if ("".equals(output)) {
-            System.out.println(message);
-        } else {
-            File file = new File(output);
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.write(message);
-            } catch (IOException e) {
-                System.out.printf("An exception occurs %s", e.getMessage());
-            }
-        }
-    }
+//    private void decryptionMode(String data, int key, String output) {
+//        String message = Decryption.decrypt(data, key);
+//        if ("".equals(output)) {
+//            System.out.println(message);
+//        } else {
+//            File file = new File(output);
+//            try (FileWriter writer = new FileWriter(file)) {
+//                writer.write(message);
+//            } catch (IOException e) {
+//                System.out.printf("An exception occurs %s", e.getMessage());
+//            }
+//        }
+//    }
 
     public String getMode() {
         return mode;
