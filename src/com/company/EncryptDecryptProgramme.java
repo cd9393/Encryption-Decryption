@@ -24,13 +24,12 @@ public class EncryptDecryptProgramme {
         }
 
         String output = "";
+        CipherFactory cipherFactory = new CipherFactory();
 
         if (("enc").equals(getMode())) {
-          EncryptionFactory encryptionFactory = new EncryptionFactory();
-          output = encryptionFactory.createEncryption(algorithm).encrypt(data,key);
+          output = cipherFactory.createEncryption(algorithm).encrypt(data,key);
         } else if (("dec").equals(mode)) {
-            DecryptionFactory decryptionFactory = new DecryptionFactory();
-            output = decryptionFactory.returnDecryption(algorithm).decrypt(data,key);
+            output = cipherFactory.createEncryption(algorithm).decrypt(data,key);
         }
 
         writeData(output, outputFilePath );
@@ -86,20 +85,6 @@ public class EncryptDecryptProgramme {
             }
         }
     }
-
-//    private void decryptionMode(String data, int key, String output) {
-//        String message = Decryption.decrypt(data, key);
-//        if ("".equals(output)) {
-//            System.out.println(message);
-//        } else {
-//            File file = new File(output);
-//            try (FileWriter writer = new FileWriter(file)) {
-//                writer.write(message);
-//            } catch (IOException e) {
-//                System.out.printf("An exception occurs %s", e.getMessage());
-//            }
-//        }
-//    }
 
     public String getMode() {
         return mode;
